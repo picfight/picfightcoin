@@ -6,6 +6,8 @@ import (
 	"math"
 )
 
+var DecredSubsidy = &DecredMainNetSubsidyCalculator{}
+
 type DecredMainNetSubsidyCalculator struct {
 	subsidyCache map[uint64]int64
 }

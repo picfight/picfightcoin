@@ -37,7 +37,8 @@ func TestDecredSubsidy(t *testing.T) {
 }
 
 func fullSubsidyCheck(t *testing.T, calc SubsidyCalculator, expected int64) {
-	totalSubsidy := coin.Amount{0}
+
+	cache := map[int64]int64{}
 	for i := int64(0); ; i++ {
 		blockIndex := i
 
@@ -45,21 +46,32 @@ func fullSubsidyCheck(t *testing.T, calc SubsidyCalculator, expected int64) {
 			calc.TicketsPerBlock())
 		stake := calc.CalcStakeVoteSubsidy(blockIndex) * int64(calc.TicketsPerBlock())
 		tax := calc.CalcBlockTaxSubsidy(blockIndex, calc.TicketsPerBlock())
-		if (i%100000 == 0) {
-			fmt.Println(fmt.Sprintf("block: %v/%v: %v", i, "?", work+stake+tax))
+		if (i%10000 == 0) {
+			fmt.Println(fmt.Sprintf("block: %v/%v: %v", i, calc.NumberOfGeneratingBlocks(), work+stake+tax))
 		}
 		if (work+stake+tax) == 0 && i > 0 {
 			break
 		}
-		totalSubsidy.AtomsValue = totalSubsidy.AtomsValue + (work + stake + tax)
+
+		cache[i] = (work + stake + tax)
 
 	}
 
+	totalSubsidy := coin.Amount{0}
+	for i := int64(0); i < int64(len(cache)); i++ {
+		k := int64(len(cache)) - 1 - i
+		totalSubsidy.AtomsValue = totalSubsidy.AtomsValue + cache[k]
+	}
+	fmt.Println(fmt.Sprintf("total: %v", totalSubsidy.AtomsValue))
 	expectedTotal := coin.Amount{expected}
 	if totalSubsidy.AtomsValue != expectedTotal.AtomsValue {
 		t.Errorf("Bad total subsidy; want %v, got %v",
 			expectedTotal.AtomsValue,
 			totalSubsidy.AtomsValue,
+		)
+		t.Errorf("Bad total subsidy; want %v, got %v",
+			expectedTotal,
+			totalSubsidy,
 		)
 	}
 }

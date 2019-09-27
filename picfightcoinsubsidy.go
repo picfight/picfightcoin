@@ -132,17 +132,16 @@ func (c *PicfightCoinSubsidyCalculator) CalcBlockTaxSubsidy(height int64, voters
 
 func (c *PicfightCoinSubsidyCalculator) CalcBlockSubsidy(height int64) int64 {
 
-	if height == 1 {
-		return PremineTotal.AtomsValue
-	}
 	if height < 1 {
 		return 0
+	}
+	if height == 1 {
+		return PremineTotal.AtomsValue
 	}
 	if height > c.FirstGeneratingBlockIndex()+c.NumberOfGeneratingBlocks() {
 		return 0
 	}
 	engine := c.engine
-	pin.AssertTrue("height>1", height > 1)
 	index := height - c.FirstGeneratingBlockIndex()
 	generateTotalBlocks := c.NumberOfGeneratingBlocks()
 	generateTotalCoins := c.ExpectedTotalNetworkSubsidy().AtomsValue - c.PreminedCoins().AtomsValue

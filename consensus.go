@@ -5,6 +5,7 @@
 package picfightcoin
 
 import (
+	"github.com/jfixby/coinamount"
 	"github.com/jfixby/difficulty"
 	"time"
 )
@@ -30,11 +31,9 @@ func DNSSeeds() []string {
 	}
 }
 
-const atomsPerCoin = 1e8
-
-func Premine() map[string]int64 {
-	return map[string]int64{
-		"JsCVh5SVDQovpW1dswaZNan2mfNWy6uRpPx": 4000000 * atomsPerCoin,
+func Premine() map[string]coinamount.CoinsAmount {
+	return map[string]coinamount.CoinsAmount{
+		"JsCVh5SVDQovpW1dswaZNan2mfNWy6uRpPx": coinamount.CoinsAmountFromFloat(4000000.0),
 	}
 }
 

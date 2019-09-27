@@ -49,7 +49,7 @@ func fullSubsidyCheck(t *testing.T, calc SubsidyCalculator, expected int64) {
 		if (i%10000 == 0) {
 			fmt.Println(fmt.Sprintf("block: %v/%v: %v", i, calc.NumberOfGeneratingBlocks(), work+stake+tax))
 		}
-		if (work+stake+tax) == 0 && i > 0 {
+		if (work+stake+tax) == 0 && i > 1 {
 			break
 		}
 

@@ -30,6 +30,14 @@ func DNSSeeds() []string {
 	}
 }
 
+const atomsPerCoin = 1e8
+
+func Premine() map[string]int64 {
+	return map[string]int64{
+		"JsCVh5SVDQovpW1dswaZNan2mfNWy6uRpPx": 4000000 * atomsPerCoin,
+	}
+}
+
 const NetworkAddressPrefix = "J"
 
 var (

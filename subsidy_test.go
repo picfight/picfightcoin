@@ -2,8 +2,8 @@ package picfightcoin
 
 import (
 	"fmt"
-	"github.com/jfixby/bignum"
 	"github.com/jfixby/coin"
+	"github.com/jfixby/pin"
 	"testing"
 )
 
@@ -23,10 +23,13 @@ func TestPremine(t *testing.T) {
 	}
 }
 
+var expectedPFCActual = coin.FromFloat(7999999.84736554)
+
 func TestPicfightCoinSubsidy(t *testing.T) {
 	calc := PicFightCoinSubsidy()
-	calc.SetEngine(bignum.BigDecimalEngine{})
+	//calc.SetEngine(bignum.BigDecimalEngine{})
 	expected := calc.ExpectedTotalNetworkSubsidy().AtomsValue
+	expected = expectedPFCActual.AtomsValue
 	fullSubsidyCheck(t, calc, expected)
 }
 
@@ -46,8 +49,8 @@ func fullSubsidyCheck(t *testing.T, calc SubsidyCalculator, expected int64) {
 			calc.TicketsPerBlock())
 		stake := calc.CalcStakeVoteSubsidy(blockIndex) * int64(calc.TicketsPerBlock())
 		tax := calc.CalcBlockTaxSubsidy(blockIndex, calc.TicketsPerBlock())
-		if (i%10000 == 0) {
-			fmt.Println(fmt.Sprintf("block: %v/%v: %v", i, calc.NumberOfGeneratingBlocks(), work+stake+tax))
+		if (i%1000000 == 0) {
+			pin.D(fmt.Sprintf("block: %v/%v: %v", i, calc.NumberOfGeneratingBlocks(), work+stake+tax))
 		}
 		if (work+stake+tax) == 0 && i > 1 {
 			break

@@ -18,18 +18,18 @@ func (c *PicfightCoinSubsidyCalculator) SetEngine(engine bignum.BigNumEngine) {
 }
 
 func (c *PicfightCoinSubsidyCalculator) ExpectedTotalNetworkSubsidy() coin.Amount {
-	return coin.FromFloat(8000000.0) // 8M
+	return coin.FromFloat(8000000) // 8M
 }
 
 func (c *PicfightCoinSubsidyCalculator) NumberOfGeneratingBlocks() int64 {
 	targetTimePerBlock := time.Minute * 5
 	DAY := time.Hour * 24
 	YEAR := DAY * 365
-	SubsidyGeneratingPeriod := YEAR * 1
+	SubsidyGeneratingPeriod := YEAR * 44
 	numberOfGeneratingBlocks := int64(SubsidyGeneratingPeriod / targetTimePerBlock)
 	numberOfGeneratingBlocks = numberOfGeneratingBlocks
-	//return numberOfGeneratingBlocks
-	return 13
+	return numberOfGeneratingBlocks
+	//return 13
 }
 
 func (c *PicfightCoinSubsidyCalculator) PreminedCoins() coin.Amount {

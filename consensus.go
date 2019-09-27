@@ -5,6 +5,7 @@
 package picfightcoin
 
 import (
+	"github.com/jfixby/bignum"
 	"github.com/jfixby/coin"
 	"github.com/jfixby/difficulty"
 	"time"
@@ -37,6 +38,17 @@ func Premine() map[string]coin.Amount {
 	}
 }
 
+var PremineTotal = calcPremineTotal()
+
+func calcPremineTotal() coin.Amount {
+	premine := Premine()
+	sum := coin.Amount{0}
+	for _, amount := range premine {
+		sum.AtomsValue = sum.AtomsValue + amount.AtomsValue
+	}
+	return sum
+}
+
 const NetworkAddressPrefix = "J"
 
 var (
@@ -57,3 +69,22 @@ func OrganizationPkScript() []byte {
 
 // PicfightCoinWire represents the picfight coin network.
 const PicfightCoinWire uint32 = 0xd9b488ff
+
+var subsidy = &PicfightCoinSubsidyCalculator{
+	engine: bignum.Float64Engine{},
+}
+
+func PicFightCoinSubsidy() SubsidyCalculator {
+	return subsidy
+}
+
+const TargetTimePerBlock = time.Minute * 5
+
+const (
+	DAY                              = time.Hour * 24
+	YEAR                             = DAY * 365
+	numberOfGeneratingBlocks         = int64(SubsidyGeneratingPeriod / TargetTimePerBlock)
+	expectedTotalNetworkSubsidyCoins = 8000000.0 // 8M
+)
+
+const SubsidyGeneratingPeriod = YEAR * 44

@@ -49,3 +49,12 @@ var (
 	ScriptHashAddrID = [2]byte{0x09, 0xea} // starts with Jc
 	PrivateKeyID     = [2]byte{0x22, 0xce} // starts with Pj
 )
+
+// Organization related parameters
+// Organization address is ?
+func OrganizationPkScript() []byte {
+	return hexDecode("a914f5916158e3e2c4551c1796708db8367207ed13bb87")
+}
+
+// PicfightCoinWire represents the picfight coin network.
+const PicfightCoinWire uint32 = 0xd9b488ff

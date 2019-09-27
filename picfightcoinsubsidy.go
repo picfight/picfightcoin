@@ -5,6 +5,7 @@ import (
 	"github.com/jfixby/coin"
 	picfightcoin "github.com/jfixby/lineardown"
 	"github.com/jfixby/pin"
+	"time"
 )
 
 type PicfightCoinSubsidyCalculator struct {
@@ -17,11 +18,18 @@ func (c *PicfightCoinSubsidyCalculator) SetEngine(engine bignum.BigNumEngine) {
 }
 
 func (c *PicfightCoinSubsidyCalculator) ExpectedTotalNetworkSubsidy() coin.Amount {
-	return coin.FromFloat(expectedTotalNetworkSubsidyCoins)
+	return coin.FromFloat(8000000.0) // 8M
 }
 
 func (c *PicfightCoinSubsidyCalculator) NumberOfGeneratingBlocks() int64 {
-	return numberOfGeneratingBlocks
+	targetTimePerBlock := time.Minute * 5
+	DAY := time.Hour * 24
+	YEAR := DAY * 365
+	SubsidyGeneratingPeriod := YEAR * 1
+	numberOfGeneratingBlocks := int64(SubsidyGeneratingPeriod / targetTimePerBlock)
+	numberOfGeneratingBlocks = numberOfGeneratingBlocks
+	//return numberOfGeneratingBlocks
+	return 13
 }
 
 func (c *PicfightCoinSubsidyCalculator) PreminedCoins() coin.Amount {

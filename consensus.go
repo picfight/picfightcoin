@@ -78,13 +78,3 @@ func PicFightCoinSubsidy() SubsidyCalculator {
 	return subsidy
 }
 
-const TargetTimePerBlock = time.Minute * 5
-
-const (
-	DAY                              = time.Hour * 24
-	YEAR                             = DAY * 365
-	numberOfGeneratingBlocks         = int64(SubsidyGeneratingPeriod / TargetTimePerBlock)
-	expectedTotalNetworkSubsidyCoins = 8000000.0 // 8M
-)
-
-const SubsidyGeneratingPeriod = YEAR * 44

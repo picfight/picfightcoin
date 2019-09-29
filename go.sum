@@ -1,0 +1,14 @@
+github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/dchest/blake256 v1.1.0 h1:4AuEhGPT/3TTKFhTfBpZ8hgZE7wJpawcYaEawwsbtqM=
+github.com/dchest/blake256 v1.1.0/go.mod h1:xXNWCE1jsAP8DAjP+rKw2MbeqLczjI3TRx2VK+9OEYY=
+github.com/decred/base58 v1.0.0/go.mod h1:LLY1p5e3g91byL/UO1eiZaYd+uRoVRarybgcoymu9Ks=
+github.com/jfixby/bignum v0.0.0-20190929091639-c48b486d8882 h1:oj34kEp0Z4Wx3Ln7Q3oM2E6U8bnODQgm1G9cGvrl1Bo=
+github.com/jfixby/bignum v0.0.0-20190929091639-c48b486d8882/go.mod h1:9nlAS/+72lbaSjHL+W3KszyxnaAEZ3fnY+0VDkJS364=
+github.com/jfixby/coin v0.0.0-20190927091650-385b78bc116b h1:FBa1TjOKI5zEjxz7+dABvYlYvKDkaQry4OfRsFF7VjA=
+github.com/jfixby/coin v0.0.0-20190927091650-385b78bc116b/go.mod h1:mFaMuHns/dWGvPLfjg6vjzWxdJLc2X88T1WwqWv91vY=
+github.com/jfixby/difficulty v1.0.0 h1:lvI8yfV7Mz09HvD70fB/PICgHjcbFa6HrA2ER8X1CNg=
+github.com/jfixby/difficulty v1.0.0/go.mod h1:eKUkJx0XjkDwjU7lA22IfU30feJcoObdPJ7rF46turk=
+github.com/jfixby/lineardown v0.0.0-20190929092236-f7c76fd15cda h1:/eazeXLXdrtG/WVdfW5c36FULYY45592LeXwXVLAIzA=
+github.com/jfixby/lineardown v0.0.0-20190929092236-f7c76fd15cda/go.mod h1:HbbVf3BMBXWoqvn2PKe2a6Eaw6RtwwVyS2RpmiHToKM=
+github.com/jfixby/pin v0.0.0-20190926185208-4828e1e664f4 h1:D7GpxLTy82tCGW56r/88JMHEC/d7VtHl/Q2jJ9awZKc=
+github.com/jfixby/pin v0.0.0-20190926185208-4828e1e664f4/go.mod h1:fcyyZW36sY5GM2qsX/sewjJu7y5ngGKoELUbDEccDqY=

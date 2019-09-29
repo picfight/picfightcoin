@@ -8,7 +8,7 @@ github.com/jfixby/coin v0.0.0-20190927091650-385b78bc116b h1:FBa1TjOKI5zEjxz7+dA
 github.com/jfixby/coin v0.0.0-20190927091650-385b78bc116b/go.mod h1:mFaMuHns/dWGvPLfjg6vjzWxdJLc2X88T1WwqWv91vY=
 github.com/jfixby/difficulty v1.0.0 h1:lvI8yfV7Mz09HvD70fB/PICgHjcbFa6HrA2ER8X1CNg=
 github.com/jfixby/difficulty v1.0.0/go.mod h1:eKUkJx0XjkDwjU7lA22IfU30feJcoObdPJ7rF46turk=
-github.com/jfixby/lineardown v0.0.0-20190929092236-f7c76fd15cda h1:/eazeXLXdrtG/WVdfW5c36FULYY45592LeXwXVLAIzA=
-github.com/jfixby/lineardown v0.0.0-20190929092236-f7c76fd15cda/go.mod h1:HbbVf3BMBXWoqvn2PKe2a6Eaw6RtwwVyS2RpmiHToKM=
+github.com/jfixby/lineardown v0.0.0-20190929093142-b0842926b9a7 h1:X/mLit9Q1H9p899uOa+nVNJckSzdeOQGW60WsNNXEaU=
+github.com/jfixby/lineardown v0.0.0-20190929093142-b0842926b9a7/go.mod h1:wNAWWpWuZfpLqZAKmm/PljmNIqC1uWSSxlHc8LNvYCk=
 github.com/jfixby/pin v0.0.0-20190926185208-4828e1e664f4 h1:D7GpxLTy82tCGW56r/88JMHEC/d7VtHl/Q2jJ9awZKc=
 github.com/jfixby/pin v0.0.0-20190926185208-4828e1e664f4/go.mod h1:fcyyZW36sY5GM2qsX/sewjJu7y5ngGKoELUbDEccDqY=

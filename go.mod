@@ -8,6 +8,6 @@ require (
 	github.com/jfixby/bignum v0.0.0-20190929091639-c48b486d8882
 	github.com/jfixby/coin v0.0.0-20190927091650-385b78bc116b
 	github.com/jfixby/difficulty v1.0.0
-	github.com/jfixby/lineardown v0.0.0-20190929092236-f7c76fd15cda
+	github.com/jfixby/lineardown v0.0.0-20190929093142-b0842926b9a7
 	github.com/jfixby/pin v0.0.0-20190926185208-4828e1e664f4
 )

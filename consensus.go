@@ -14,7 +14,7 @@ import (
 // NetworkPoWLimit is proof-of-work limit parameter.
 func NetworkPoWLimit() *difficulty.Difficulty {
 	return difficulty.NewDifficultyFromHashString( //
-		"00 00 ff ff ffffffffffffffffffffffffffffffffffffffffffffffffffffffff")
+		"00 00 0f ff ffffffffffffffffffffffffffffffffffffffffffffffffffffffff")
 }
 
 func GenesisBlockPowBits() uint32 {

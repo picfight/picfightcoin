@@ -10,6 +10,7 @@ import (
 
 type PicfightCoinSubsidyCalculator struct {
 	engine bignum.BigNumEngine
+	cache  map[int64]bignum.BigNum
 }
 
 func (c *PicfightCoinSubsidyCalculator) SetEngine(engine bignum.BigNumEngine) {
@@ -116,11 +117,21 @@ func (c *PicfightCoinSubsidyCalculator) CalcBlockSubsidy(height int64) int64 {
 	if height > c.FirstGeneratingBlockIndex()+c.NumberOfGeneratingBlocks() {
 		return 0
 	}
+
+	if c.cache == nil {
+		c.cache = map[int64]bignum.BigNum{}
+	}
+	cached := c.cache[height]
+	if cached != nil {
+		genCoins := coin.FromFloat(cached.ToFloat64())
+		return genCoins.AtomsValue
+	}
 	engine := c.engine
 	index := height - c.FirstGeneratingBlockIndex()
 	generateTotalBlocks := c.NumberOfGeneratingBlocks()
 	generateTotalCoins := c.ExpectedTotalNetworkSubsidy().AtomsValue - c.PreminedCoins().AtomsValue
 	gen := picfightcoin.LinearDownGenerate(engine, generateTotalBlocks, coin.Amount{generateTotalCoins}, index)
+	c.cache[height] = gen
 	genCoins := coin.FromFloat(gen.ToFloat64())
 	return genCoins.AtomsValue
 }

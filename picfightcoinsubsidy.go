@@ -38,13 +38,10 @@ func (c *PicfightCoinSubsidyCalculator) PreminedCoins() coin.Amount {
 }
 
 func (c *PicfightCoinSubsidyCalculator) CalcBlockWorkSubsidy(height int64, voters uint16) int64 {
+	blockSubsidy := c.CalcBlockSubsidy(height)
+	stakeSubsidy := c.CalcStakeVoteSubsidy(height) * int64(c.TicketsPerBlock())
 
-	subsidy := c.CalcBlockSubsidy(height)
-
-	proportionWork := WorkRewardProportion()
-	proportions := TotalSubsidyProportions()
-	subsidy *= proportionWork
-	subsidy /= proportions
+	subsidy := blockSubsidy - stakeSubsidy
 
 	// Ignore the voters field of the header before we're at a point
 	// where there are any voters.
@@ -71,27 +68,15 @@ func (c *PicfightCoinSubsidyCalculator) CalcStakeVoteSubsidy(height int64) int64
 	// Note that voters/potential voters is 1, so that vote reward is calculated
 	// irrespective of block reward.
 	subsidy := c.CalcBlockSubsidy(height)
-	subsidy *= StakeRewardProportion()
-	subsidy /= (TotalSubsidyProportions() * int64(c.TicketsPerBlock()))
+	subsidy *= 4
+	subsidy /= 10 * int64(c.TicketsPerBlock())
 	return subsidy
-}
+	//total:
+	//	799999997687360
 
-func TotalSubsidyProportions() int64 {
-	expected := WorkRewardProportion() + StakeRewardProportion() + BlockTaxProportion() // should be 100%
-	pin.AssertTrue("TotalSubsidyProportions==100", expected == 100)
-	return expected
-}
-
-func WorkRewardProportion() int64 {
-	return int64(60) //60%
-}
-
-func StakeRewardProportion() int64 {
-	return int64(40) //40%
-}
-
-func BlockTaxProportion() int64 {
-	return int64(0) //0% - no taxation, because we already did the taxation by premining
+	//subsidy := float64(c.CalcBlockSubsidy(height)) * 4 / 10 / float64(c.TicketsPerBlock())
+	//return int64(subsidy)
+	//total: 7999999.97687360
 }
 
 func (c *PicfightCoinSubsidyCalculator) FirstGeneratingBlockIndex() int64 {

@@ -101,33 +101,8 @@ func (c *PicfightCoinSubsidyCalculator) FirstGeneratingBlockIndex() int64 {
 }
 
 func (c *PicfightCoinSubsidyCalculator) CalcBlockTaxSubsidy(height int64, voters uint16) int64 {
-	if BlockTaxProportion() == 0 {
-		return 0
-	}
-
-	subsidy := c.CalcBlockSubsidy(height)
-
-	proportionTax := BlockTaxProportion()
-	proportions := TotalSubsidyProportions()
-	subsidy *= proportionTax
-	subsidy /= proportions
-
-	// Assume all voters 'present' before stake voting is turned on.
-	if height < c.StakeValidationHeight() {
-		voters = 5
-	}
-
-	// If there are no voters, subsidy is 0. The block will fail later anyway.
-	if voters == 0 && height >= c.StakeValidationHeight() {
-		return 0
-	}
-
-	// Adjust for the number of voters. This shouldn't ever overflow if you start
-	// with 50 * 10^8 Atoms and voters and potentialVoters are uint16.
-	potentialVoters := c.TicketsPerBlock()
-	adjusted := (int64(voters) * subsidy) / int64(potentialVoters)
-
-	return adjusted
+	//0% - no taxation, because we already did the taxation by premining
+	return 0
 }
 
 func (c *PicfightCoinSubsidyCalculator) CalcBlockSubsidy(height int64) int64 {

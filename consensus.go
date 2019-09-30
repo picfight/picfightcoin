@@ -25,19 +25,6 @@ func GenesisBlockTimestamp() time.Time {
 	return time.Unix(1569855611, 0)
 }
 
-func DNSSeeds() []string {
-	return []string{
-		"eu-01.seed.picfight.org",
-		"eu-02.seed.picfight.org",
-		//
-		"us-01.seed.picfight.org",
-		"us-02.seed.picfight.org",
-		//
-		"ap-01.seed.picfight.org",
-		"ap-02.seed.picfight.org",
-	}
-}
-
 const projectPremineTotal = 4000000.0 // 4M
 
 // tickets_per_block(5) * (mature_time(256) + vote(1) + mature_time(256)) * coins_per_ticket(2)

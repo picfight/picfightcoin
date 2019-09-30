@@ -14,7 +14,7 @@ import (
 // NetworkPoWLimit is proof-of-work limit parameter.
 func NetworkPoWLimit() *difficulty.Difficulty {
 	return difficulty.NewDifficultyFromHashString( //
-		"00 00 0f ff ffffffffffffffffffffffffffffffffffffffffffffffffffffffff")
+		"00 00 00 ff ffffffffffffffffffffffffffffffffffffffffffffffffffffffff")
 }
 
 func GenesisBlockPowBits() uint32 {
@@ -22,19 +22,34 @@ func GenesisBlockPowBits() uint32 {
 }
 
 func GenesisBlockTimestamp() time.Time {
-	return time.Unix(1569336596, 0)
+	return time.Unix(1569855611, 0)
 }
 
 func DNSSeeds() []string {
 	return []string{
 		"eu-01.seed.picfight.org",
 		"eu-02.seed.picfight.org",
+		//
+		"us-01.seed.picfight.org",
+		"us-02.seed.picfight.org",
+		//
+		"ap-01.seed.picfight.org",
+		"ap-02.seed.picfight.org",
 	}
 }
 
+const projectPremineTotal = 4000000.0 // 4M
+
+// tickets_per_block(5) * (mature_time(256) + vote(1) + mature_time(256)) * coins_per_ticket(2)
+// 5 * (256 + 1 + 256) * 2 = 5130 (fees excluded)
+const projectPreminePoS = 6000
+
 func Premine() map[string]coin.Amount {
 	return map[string]coin.Amount{
-		"JsCVh5SVDQovpW1dswaZNan2mfNWy6uRpPx": coin.FromFloat(4000000.0),
+		"JsKEwugutnHaQ71DaPqfN5hP1VYapSLpw92":// PROJECT PREMINE
+		coin.FromFloat(projectPremineTotal - projectPreminePoS),
+		"JsXVKweatCh63iX6NsRM5ahGbrb7XRKGwE8":// PROJECT PoS-SECURITY LAYER
+		coin.FromFloat(projectPreminePoS),
 	}
 }
 
@@ -77,4 +92,3 @@ var subsidy = &PicfightCoinSubsidyCalculator{
 func PicFightCoinSubsidy() SubsidyCalculator {
 	return subsidy
 }
-

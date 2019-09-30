@@ -50,7 +50,7 @@ func fullSubsidyCheck(t *testing.T, calc SubsidyCalculator, expected int64) {
 			calc.TicketsPerBlock())
 		stake := calc.CalcStakeVoteSubsidy(blockIndex) * int64(calc.TicketsPerBlock())
 		tax := calc.CalcBlockTaxSubsidy(blockIndex, calc.TicketsPerBlock())
-		if (i%1000000 == 0) {
+		if i%1000000 == 0 {
 			pin.D(fmt.Sprintf("block: %v/%v: %v", i, calc.NumberOfGeneratingBlocks(), work+stake+tax))
 		}
 		//if blockSubsidy != work+stake+tax && blockIndex > 1 {

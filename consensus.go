@@ -22,7 +22,7 @@ func GenesisBlockPowBits() uint32 {
 }
 
 func GenesisBlockTimestamp() time.Time {
-	return time.Unix(1569855611, 0)
+	return time.Unix(1569930433, 0)
 }
 
 const projectPremineTotal = 4000000.0 // 4M
@@ -33,10 +33,10 @@ const projectPreminePoS = 6000
 
 func Premine() map[string]coin.Amount {
 	return map[string]coin.Amount{
-		"JsKEwugutnHaQ71DaPqfN5hP1VYapSLpw92":// PROJECT PREMINE
-		coin.FromFloat(projectPremineTotal - projectPreminePoS),
-		"JsXVKweatCh63iX6NsRM5ahGbrb7XRKGwE8":// PROJECT PoS-SECURITY LAYER
-		coin.FromFloat(projectPreminePoS),
+		//"JsKEwugutnHaQ71DaPqfN5hP1VYapSLpw92":// PROJECT PREMINE
+		//coin.FromFloat(projectPremineTotal - projectPreminePoS),
+		//"JsXVKweatCh63iX6NsRM5ahGbrb7XRKGwE8":// PROJECT PoS-SECURITY LAYER
+		//coin.FromFloat(projectPreminePoS),
 	}
 }
 

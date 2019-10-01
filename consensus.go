@@ -27,8 +27,8 @@ func GenesisBlockTimestamp() time.Time {
 
 const projectPremineTotal = 4000000.0 // 4M
 
-const PROJECT_PREMINE_ADDRESS_STRING = ""
-const PROJECT_PREMINE_POS_ADDRESS_STRING = ""
+const PROJECT_PREMINE_ADDRESS_STRING = "JsKFRL5ivSH7CnYaTtaBT4M9fZG878g49Fg"
+const PROJECT_PREMINE_POS_ADDRESS_STRING = "JsRjbYZ448FxZQ5kQAc15NcwUQ1oqYydVEG"
 
 // tickets_per_block(5) * (mature_time(256) + vote(1) + mature_time(256)) * coins_per_ticket(2)
 // 5 * (256 + 1 + 256) * 2 = 5130 (fees excluded)
@@ -36,10 +36,10 @@ const projectPreminePoS = 6000
 
 func Premine() map[string]coin.Amount {
 	return map[string]coin.Amount{
-		//PROJECT_PREMINE_ADDRESS_STRING:// PROJECT PREMINE
-		//coin.FromFloat(projectPremineTotal - projectPreminePoS),
-		//PROJECT_PREMINE_POS_ADDRESS_STRING:// PROJECT PoS-SECURITY LAYER
-		//coin.FromFloat(projectPreminePoS),
+		PROJECT_PREMINE_ADDRESS_STRING:// PROJECT PREMINE
+		coin.FromFloat(projectPremineTotal - projectPreminePoS),
+		PROJECT_PREMINE_POS_ADDRESS_STRING:// PROJECT PoS-SECURITY LAYER
+		coin.FromFloat(projectPreminePoS),
 	}
 }
 

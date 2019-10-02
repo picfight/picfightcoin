@@ -37,7 +37,7 @@ func TestPicfightCoinSubsidy(t *testing.T) {
 func TestDecredSubsidy(t *testing.T) {
 	calc := DecredMainNetSubsidy()
 	expected := calc.ExpectedTotalNetworkSubsidy().AtomsValue
-	fullSubsidyCheck(t, calc, expected)
+	fullSubsidyCheck(t, calc.(SubsidyCalculator), expected)
 }
 
 func fullSubsidyCheck(t *testing.T, calc SubsidyCalculator, expected int64) {
@@ -102,10 +102,10 @@ func TestDecredSubsidyOriginal(t *testing.T) {
 	calc := DecredMainNetSubsidy()
 	expected := calc.ExpectedTotalNetworkSubsidy().AtomsValue
 	expected = originalTestExpected
-	originalDecredSubsidyCheck(t, calc.(*DecredMainNetSubsidyCalculator), expected)
+	originalDecredSubsidyCheck(t, calc.(DecredSubsidyCalculator), expected)
 }
 
-func originalDecredSubsidyCheck(t *testing.T, calc *DecredMainNetSubsidyCalculator, expected int64) {
+func originalDecredSubsidyCheck(t *testing.T, calc DecredSubsidyCalculator, expected int64) {
 	totalSubsidy := calc.BlockOneSubsidy()
 	for i := int64(0); ; i++ {
 		// Genesis block or first block.

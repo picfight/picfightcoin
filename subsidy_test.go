@@ -99,13 +99,13 @@ func fullSubsidyCheck(t *testing.T, calc SubsidyCalculator, expected int64) {
 const originalTestExpected int64 = 2099999999800912
 
 func TestDecredSubsidyOriginal(t *testing.T) {
-	calc := DecredMainNetSubsidy().(*DecredMainNetSubsidyCalculator)
+	calc := DecredMainNetSubsidy().(*decredMainNetSubsidyCalculator)
 	expected := calc.ExpectedTotalNetworkSubsidy().AtomsValue
 	expected = originalTestExpected
 	originalDecredSubsidyCheck(t, calc, expected)
 }
 
-func originalDecredSubsidyCheck(t *testing.T, calc *DecredMainNetSubsidyCalculator, expected int64) {
+func originalDecredSubsidyCheck(t *testing.T, calc *decredMainNetSubsidyCalculator, expected int64) {
 	totalSubsidy := calc.BlockOneSubsidy()
 	for i := int64(0); ; i++ {
 		// Genesis block or first block.

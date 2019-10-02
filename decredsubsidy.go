@@ -29,7 +29,7 @@ type DecredSubsidyParams struct {
 	SubsidyReductionInterval int64
 }
 
-var decredSubsidy = &DecredMainNetSubsidyCalculator{
+var decredSubsidy = &decredMainNetSubsidyCalculator{
 	subsidyParams: DecredSubsidyParams{
 		BaseSubsidy:              3119582664,
 		MulSubsidy:               100,
@@ -42,29 +42,29 @@ func DecredMainNetSubsidy() SubsidyCalculator {
 	return decredSubsidy
 }
 
-type DecredMainNetSubsidyCalculator struct {
+type decredMainNetSubsidyCalculator struct {
 	subsidyCache  map[uint64]int64
 	subsidyParams DecredSubsidyParams
 }
 
-func (c *DecredMainNetSubsidyCalculator) SetEngine(engine bignum.BigNumEngine) {
+func (c *decredMainNetSubsidyCalculator) SetEngine(engine bignum.BigNumEngine) {
 	panic("implement me")
 }
 
-func (c *DecredMainNetSubsidyCalculator) ExpectedTotalNetworkSubsidy() coin.Amount {
+func (c *decredMainNetSubsidyCalculator) ExpectedTotalNetworkSubsidy() coin.Amount {
 	return coin.Amount{2103834590794301}
 	// value received by block-by-block testing
 }
 
-func (DecredMainNetSubsidyCalculator) NumberOfGeneratingBlocks() int64 {
+func (decredMainNetSubsidyCalculator) NumberOfGeneratingBlocks() int64 {
 	return math.MaxInt64
 }
 
-func (c *DecredMainNetSubsidyCalculator) PreminedCoins() coin.Amount {
+func (c *decredMainNetSubsidyCalculator) PreminedCoins() coin.Amount {
 	return coin.Amount{c.BlockOneSubsidy()}
 }
 
-func (c *DecredMainNetSubsidyCalculator) CalcBlockWorkSubsidy(height int64, voters uint16) int64 {
+func (c *decredMainNetSubsidyCalculator) CalcBlockWorkSubsidy(height int64, voters uint16) int64 {
 	subsidy := c.CalcBlockSubsidy(height)
 
 	proportionWork := int64(c.WorkRewardProportion())
@@ -91,7 +91,7 @@ func (c *DecredMainNetSubsidyCalculator) CalcBlockWorkSubsidy(height int64, vote
 	return actual
 }
 
-func (c *DecredMainNetSubsidyCalculator) CalcStakeVoteSubsidy(height int64) int64 {
+func (c *decredMainNetSubsidyCalculator) CalcStakeVoteSubsidy(height int64) int64 {
 	// Calculate the actual reward for this block, then further reduce reward
 	// proportional to StakeRewardProportion.
 	// Note that voters/potential voters is 1, so that vote reward is calculated
@@ -106,14 +106,14 @@ func (c *DecredMainNetSubsidyCalculator) CalcStakeVoteSubsidy(height int64) int6
 	return subsidy
 }
 
-func (DecredMainNetSubsidyCalculator) FirstGeneratingBlockIndex() int64 {
+func (decredMainNetSubsidyCalculator) FirstGeneratingBlockIndex() int64 {
 	// 0 - genesis block
 	// 1 - premine block
 	// and the
 	return 2 // - is the first generating block
 }
 
-func (c *DecredMainNetSubsidyCalculator) CalcBlockTaxSubsidy(height int64, voters uint16) int64 {
+func (c *decredMainNetSubsidyCalculator) CalcBlockTaxSubsidy(height int64, voters uint16) int64 {
 	if c.BlockTaxProportion() == 0 {
 		return 0
 	}
@@ -143,7 +143,7 @@ func (c *DecredMainNetSubsidyCalculator) CalcBlockTaxSubsidy(height int64, voter
 	return adjusted
 }
 
-func (c *DecredMainNetSubsidyCalculator) CalcBlockSubsidy(height int64) int64 {
+func (c *decredMainNetSubsidyCalculator) CalcBlockSubsidy(height int64) int64 {
 	// Block height 1 subsidy is 'special' and used to
 	// distribute initial tokens, if any.
 	if height == 1 {
@@ -193,34 +193,34 @@ func (c *DecredMainNetSubsidyCalculator) CalcBlockSubsidy(height int64) int64 {
 	return subsidy
 }
 
-func (c *DecredMainNetSubsidyCalculator) WorkRewardProportion() uint16 {
+func (c *decredMainNetSubsidyCalculator) WorkRewardProportion() uint16 {
 	return 6
 }
 
-func (c *DecredMainNetSubsidyCalculator) TotalSubsidyProportions() uint16 {
+func (c *decredMainNetSubsidyCalculator) TotalSubsidyProportions() uint16 {
 	return c.WorkRewardProportion() + c.StakeRewardProportion() + c.BlockTaxProportion()
 }
 
-func (c *DecredMainNetSubsidyCalculator) TicketsPerBlock() uint16 {
+func (c *decredMainNetSubsidyCalculator) TicketsPerBlock() uint16 {
 	return 5
 }
 
-func (c *DecredMainNetSubsidyCalculator) BlockOneSubsidy() int64 {
+func (c *decredMainNetSubsidyCalculator) BlockOneSubsidy() int64 {
 	return 168000000000000
 }
 
-func (c *DecredMainNetSubsidyCalculator) StakeRewardProportion() uint16 {
+func (c *decredMainNetSubsidyCalculator) StakeRewardProportion() uint16 {
 	return 3
 }
 
-func (c *DecredMainNetSubsidyCalculator) BlockTaxProportion() uint16 {
+func (c *decredMainNetSubsidyCalculator) BlockTaxProportion() uint16 {
 	return 1
 }
 
-func (c *DecredMainNetSubsidyCalculator) StakeValidationHeight() int64 {
+func (c *decredMainNetSubsidyCalculator) StakeValidationHeight() int64 {
 	return 4096 // ~14 days
 }
 
-func (c *DecredMainNetSubsidyCalculator) EstimateSupply(height int64) int64 {
+func (c *decredMainNetSubsidyCalculator) EstimateSupply(height int64) int64 {
 	return EstimateDecredSupply(&c.subsidyParams, height, c.BlockOneSubsidy())
 }

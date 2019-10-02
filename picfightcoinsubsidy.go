@@ -9,9 +9,9 @@ import (
 )
 
 type PicfightCoinSubsidyCalculator struct {
-	engine               bignum.BigNumEngine
-	blockSubsidyCache    map[int64]bignum.BigNum
-	estimatedSupplyCache map[int64]*int64
+	engine                      bignum.BigNumEngine
+	blockSubsidyCache           map[int64]bignum.BigNum
+	blockByBlockSupplyEstimator *BlockByBlockSupplyEstimator
 }
 
 func (c *PicfightCoinSubsidyCalculator) WorkRewardProportion() uint16 {
@@ -31,11 +31,12 @@ func (c *PicfightCoinSubsidyCalculator) SubsidyReductionInterval() int64 {
 }
 
 func (c *PicfightCoinSubsidyCalculator) EstimateSupply(height int64) int64 {
-	panic("not implemented")
-	//if c.estimatedSupplyCache == nil {
-	//	c.estimatedSupplyCache = make(map[int64]*int64)
-	//}
-	//return EstimateSupplyWithCache(c.estimatedSupplyCache, height, c.CalcBlockSubsidy)
+	if c.blockByBlockSupplyEstimator == nil {
+		c.blockByBlockSupplyEstimator = &BlockByBlockSupplyEstimator{
+			SubsidyCalculator: c,
+		}
+	}
+	return c.blockByBlockSupplyEstimator.Estimate(height)
 }
 
 func (c *PicfightCoinSubsidyCalculator) SetEngine(engine bignum.BigNumEngine) {
@@ -53,7 +54,6 @@ func (c *PicfightCoinSubsidyCalculator) NumberOfGeneratingBlocks() int64 {
 	YEAR := DAY * 365
 	SubsidyGeneratingPeriod := YEAR * 44
 	numberOfGeneratingBlocks := int64(SubsidyGeneratingPeriod / targetTimePerBlock)
-	numberOfGeneratingBlocks = numberOfGeneratingBlocks
 	return numberOfGeneratingBlocks
 	//return 13
 }
@@ -96,12 +96,6 @@ func (c *PicfightCoinSubsidyCalculator) CalcStakeVoteSubsidy(height int64) int64
 	subsidy *= int64(c.StakeRewardProportion())
 	subsidy /= 10 * int64(c.TicketsPerBlock())
 	return subsidy
-	//total:
-	//	799999997687360
-
-	//subsidy := float64(c.CalcBlockSubsidy(height)) * 4 / 10 / float64(c.TicketsPerBlock())
-	//return int64(subsidy)
-	//total: 7999999.97687360
 }
 
 func (c *PicfightCoinSubsidyCalculator) FirstGeneratingBlockIndex() int64 {

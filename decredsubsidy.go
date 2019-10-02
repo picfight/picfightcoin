@@ -27,12 +27,11 @@ type DecredSubsidyCalculator interface {
 	BlockTaxProportion() uint16
 	SubsidyReductionInterval() int64
 	StakeValidationHeight() int64
-
 }
 
 var decredSubsidy = &DecredMainNetSubsidyCalculator{}
 
-func DecredMainNetSubsidy() DecredSubsidyCalculator {
+func DecredMainNetSubsidy() SubsidyCalculator {
 	return decredSubsidy
 }
 

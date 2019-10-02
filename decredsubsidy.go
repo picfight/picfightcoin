@@ -6,7 +6,19 @@ import (
 	"math"
 )
 
-var DecredSubsidy = &DecredMainNetSubsidyCalculator{}
+type DecredSubsidyCalculator interface {
+	BlockOneSubsidy() int64
+	BaseSubsidy() int64
+	SubsidyReductionInterval() int64
+	MulSubsidy() int64
+	DivSubsidy() int64
+}
+
+var decredSubsidy = &DecredMainNetSubsidyCalculator{}
+
+func DecredMainNetSubsidy() SubsidyCalculator {
+	return decredSubsidy
+}
 
 type DecredMainNetSubsidyCalculator struct {
 	subsidyCache map[uint64]int64
@@ -125,15 +137,15 @@ func (c *DecredMainNetSubsidyCalculator) CalcBlockSubsidy(height int64) int64 {
 		c.subsidyCache = make(map[uint64]int64)
 	}
 
-	// First, check the cache.
+	// First, check the blockSubsidyCache.
 	cachedValue, existsInCache := c.subsidyCache[iteration]
 	if existsInCache {
 		return cachedValue
 	}
 
-	// Is the previous one in the cache? If so, calculate
+	// Is the previous one in the blockSubsidyCache? If so, calculate
 	// the subsidy from the previous known value and store
-	// it in the database and the cache.
+	// it in the database and the blockSubsidyCache.
 	cachedValue, existsInCache = c.subsidyCache[iteration-1]
 	if existsInCache {
 		cachedValue *= c.MulSubsidy()
@@ -145,7 +157,7 @@ func (c *DecredMainNetSubsidyCalculator) CalcBlockSubsidy(height int64) int64 {
 	}
 
 	// Calculate the subsidy from scratch and store in the
-	// cache. TODO If there's an older item in the cache,
+	// blockSubsidyCache. TODO If there's an older item in the blockSubsidyCache,
 	// calculate it from that to save time.
 	subsidy := c.BaseSubsidy()
 	for i := uint64(0); i < iteration; i++ {
@@ -200,4 +212,8 @@ func (c *DecredMainNetSubsidyCalculator) DivSubsidy() int64 {
 
 func (c *DecredMainNetSubsidyCalculator) StakeValidationHeight() int64 {
 	return 4096 // ~14 days
+}
+
+func (c *DecredMainNetSubsidyCalculator) EstimateSupply(height int64) int64 {
+	return EstimateDecredSupply(c, height)
 }

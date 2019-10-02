@@ -35,7 +35,7 @@ func TestPicfightCoinSubsidy(t *testing.T) {
 }
 
 func TestDecredSubsidy(t *testing.T) {
-	calc := DecredSubsidy
+	calc := DecredMainNetSubsidy()
 	expected := calc.ExpectedTotalNetworkSubsidy().AtomsValue
 	fullSubsidyCheck(t, calc, expected)
 }
@@ -99,10 +99,10 @@ func fullSubsidyCheck(t *testing.T, calc SubsidyCalculator, expected int64) {
 const originalTestExpected int64 = 2099999999800912
 
 func TestDecredSubsidyOriginal(t *testing.T) {
-	calc := DecredSubsidy
+	calc := DecredMainNetSubsidy()
 	expected := calc.ExpectedTotalNetworkSubsidy().AtomsValue
 	expected = originalTestExpected
-	originalDecredSubsidyCheck(t, calc, expected)
+	originalDecredSubsidyCheck(t, calc.(*DecredMainNetSubsidyCalculator), expected)
 }
 
 func originalDecredSubsidyCheck(t *testing.T, calc *DecredMainNetSubsidyCalculator, expected int64) {

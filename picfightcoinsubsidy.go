@@ -9,8 +9,33 @@ import (
 )
 
 type PicfightCoinSubsidyCalculator struct {
-	engine bignum.BigNumEngine
-	cache  map[int64]bignum.BigNum
+	engine               bignum.BigNumEngine
+	blockSubsidyCache    map[int64]bignum.BigNum
+	estimatedSupplyCache map[int64]*int64
+}
+
+func (c *PicfightCoinSubsidyCalculator) WorkRewardProportion() uint16 {
+	return 6 // 60%
+}
+
+func (c *PicfightCoinSubsidyCalculator) StakeRewardProportion() uint16 {
+	return 4 // 40%
+}
+
+func (c *PicfightCoinSubsidyCalculator) BlockTaxProportion() uint16 {
+	return 0 // 0%
+}
+
+func (c *PicfightCoinSubsidyCalculator) SubsidyReductionInterval() int64 {
+	return 1 // each block
+}
+
+func (c *PicfightCoinSubsidyCalculator) EstimateSupply(height int64) int64 {
+	panic("not implemented")
+	//if c.estimatedSupplyCache == nil {
+	//	c.estimatedSupplyCache = make(map[int64]*int64)
+	//}
+	//return EstimateSupplyWithCache(c.estimatedSupplyCache, height, c.CalcBlockSubsidy)
 }
 
 func (c *PicfightCoinSubsidyCalculator) SetEngine(engine bignum.BigNumEngine) {
@@ -68,7 +93,7 @@ func (c *PicfightCoinSubsidyCalculator) CalcStakeVoteSubsidy(height int64) int64
 	// Note that voters/potential voters is 1, so that vote reward is calculated
 	// irrespective of block reward.
 	subsidy := c.CalcBlockSubsidy(height)
-	subsidy *= 4
+	subsidy *= int64(c.StakeRewardProportion())
 	subsidy /= 10 * int64(c.TicketsPerBlock())
 	return subsidy
 	//total:
@@ -103,10 +128,10 @@ func (c *PicfightCoinSubsidyCalculator) CalcBlockSubsidy(height int64) int64 {
 		return 0
 	}
 
-	if c.cache == nil {
-		c.cache = map[int64]bignum.BigNum{}
+	if c.blockSubsidyCache == nil {
+		c.blockSubsidyCache = map[int64]bignum.BigNum{}
 	}
-	cached := c.cache[height]
+	cached := c.blockSubsidyCache[height]
 	if cached != nil {
 		genCoins := coin.FromFloat(cached.ToFloat64())
 		return genCoins.AtomsValue
@@ -116,7 +141,7 @@ func (c *PicfightCoinSubsidyCalculator) CalcBlockSubsidy(height int64) int64 {
 	generateTotalBlocks := c.NumberOfGeneratingBlocks()
 	generateTotalCoins := c.ExpectedTotalNetworkSubsidy().AtomsValue - c.PreminedCoins().AtomsValue
 	gen := picfightcoin.LinearDownGenerate(engine, generateTotalBlocks, coin.Amount{generateTotalCoins}, index)
-	c.cache[height] = gen
+	c.blockSubsidyCache[height] = gen
 	genCoins := coin.FromFloat(gen.ToFloat64())
 	return genCoins.AtomsValue
 }

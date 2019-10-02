@@ -16,6 +16,12 @@ type SubsidyCalculator interface {
 	CalcBlockSubsidy(height int64) int64
 	TicketsPerBlock() uint16
 	SetEngine(engine bignum.BigNumEngine)
+	EstimateSupply(height int64) int64
+	WorkRewardProportion() uint16
+	StakeRewardProportion() uint16
+	BlockTaxProportion() uint16
+	SubsidyReductionInterval() int64
+	StakeValidationHeight() int64
 }
 
 //type PicFightCoinSubsidy struct {

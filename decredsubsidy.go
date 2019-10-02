@@ -6,37 +6,45 @@ import (
 	"math"
 )
 
-type DecredSubsidyCalculator interface {
-	BlockOneSubsidy() int64
-	BaseSubsidy() int64
-	MulSubsidy() int64
-	DivSubsidy() int64
-	ExpectedTotalNetworkSubsidy() coin.Amount
-	NumberOfGeneratingBlocks() int64
-	PreminedCoins() coin.Amount
-	FirstGeneratingBlockIndex() int64
-	CalcBlockWorkSubsidy(height int64, voters uint16) int64
-	CalcStakeVoteSubsidy(height int64) int64
-	CalcBlockTaxSubsidy(height int64, voters uint16) int64
-	CalcBlockSubsidy(height int64) int64
-	TicketsPerBlock() uint16
-	SetEngine(engine bignum.BigNumEngine)
-	EstimateSupply(height int64) int64
-	WorkRewardProportion() uint16
-	StakeRewardProportion() uint16
-	BlockTaxProportion() uint16
-	SubsidyReductionInterval() int64
-	StakeValidationHeight() int64
+type DecredSubsidyParams struct {
+	// Subsidy parameters.
+	//
+	// Subsidy calculation for exponential reductions:
+	// 0 for i in range (0, height / SubsidyReductionInterval):
+	// 1     subsidy *= MulSubsidy
+	// 2     subsidy /= DivSubsidy
+	//
+	// Caveat: Don't overflow the int64 register!!
+
+	// BaseSubsidy is the starting subsidy amount for mined blocks.
+	BaseSubsidy int64
+
+	// Subsidy reduction multiplier.
+	MulSubsidy int64
+
+	// Subsidy reduction divisor.
+	DivSubsidy int64
+
+	// SubsidyReductionInterval is the reduction interval in blocks.
+	SubsidyReductionInterval int64
 }
 
-var decredSubsidy = &DecredMainNetSubsidyCalculator{}
+var decredSubsidy = &DecredMainNetSubsidyCalculator{
+	subsidyParams: DecredSubsidyParams{
+		BaseSubsidy:              3119582664,
+		MulSubsidy:               100,
+		DivSubsidy:               101,
+		SubsidyReductionInterval: 6144,
+	},
+}
 
 func DecredMainNetSubsidy() SubsidyCalculator {
 	return decredSubsidy
 }
 
 type DecredMainNetSubsidyCalculator struct {
-	subsidyCache map[uint64]int64
+	subsidyCache  map[uint64]int64
+	subsidyParams DecredSubsidyParams
 }
 
 func (c *DecredMainNetSubsidyCalculator) SetEngine(engine bignum.BigNumEngine) {
@@ -142,10 +150,10 @@ func (c *DecredMainNetSubsidyCalculator) CalcBlockSubsidy(height int64) int64 {
 		return c.BlockOneSubsidy()
 	}
 
-	iteration := uint64(height / c.SubsidyReductionInterval())
+	iteration := uint64(height / c.subsidyParams.SubsidyReductionInterval)
 
 	if iteration == 0 {
-		return c.BaseSubsidy()
+		return c.subsidyParams.BaseSubsidy
 	}
 
 	if c.subsidyCache == nil {
@@ -163,8 +171,8 @@ func (c *DecredMainNetSubsidyCalculator) CalcBlockSubsidy(height int64) int64 {
 	// it in the database and the blockSubsidyCache.
 	cachedValue, existsInCache = c.subsidyCache[iteration-1]
 	if existsInCache {
-		cachedValue *= c.MulSubsidy()
-		cachedValue /= c.DivSubsidy()
+		cachedValue *= c.subsidyParams.MulSubsidy
+		cachedValue /= c.subsidyParams.DivSubsidy
 
 		c.subsidyCache[iteration] = cachedValue
 
@@ -174,10 +182,10 @@ func (c *DecredMainNetSubsidyCalculator) CalcBlockSubsidy(height int64) int64 {
 	// Calculate the subsidy from scratch and store in the
 	// blockSubsidyCache. TODO If there's an older item in the blockSubsidyCache,
 	// calculate it from that to save time.
-	subsidy := c.BaseSubsidy()
+	subsidy := c.subsidyParams.BaseSubsidy
 	for i := uint64(0); i < iteration; i++ {
-		subsidy *= c.MulSubsidy()
-		subsidy /= c.DivSubsidy()
+		subsidy *= c.subsidyParams.MulSubsidy
+		subsidy /= c.subsidyParams.DivSubsidy
 	}
 
 	c.subsidyCache[iteration] = subsidy
@@ -187,10 +195,6 @@ func (c *DecredMainNetSubsidyCalculator) CalcBlockSubsidy(height int64) int64 {
 
 func (c *DecredMainNetSubsidyCalculator) WorkRewardProportion() uint16 {
 	return 6
-}
-
-func (c *DecredMainNetSubsidyCalculator) SubsidyReductionInterval() int64 {
-	return 6144
 }
 
 func (c *DecredMainNetSubsidyCalculator) TotalSubsidyProportions() uint16 {
@@ -213,22 +217,10 @@ func (c *DecredMainNetSubsidyCalculator) BlockTaxProportion() uint16 {
 	return 1
 }
 
-func (c *DecredMainNetSubsidyCalculator) BaseSubsidy() int64 {
-	return 3119582664
-}
-
-func (c *DecredMainNetSubsidyCalculator) MulSubsidy() int64 {
-	return 100
-}
-
-func (c *DecredMainNetSubsidyCalculator) DivSubsidy() int64 {
-	return 101
-}
-
 func (c *DecredMainNetSubsidyCalculator) StakeValidationHeight() int64 {
 	return 4096 // ~14 days
 }
 
 func (c *DecredMainNetSubsidyCalculator) EstimateSupply(height int64) int64 {
-	return EstimateDecredSupply(c, height)
+	return EstimateDecredSupply(&c.subsidyParams, height, c.BlockOneSubsidy())
 }

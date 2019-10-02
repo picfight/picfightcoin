@@ -36,7 +36,7 @@ func EstimateSupplyWithCache(cache map[int64]*int64, height int64, CalcBlockSubs
 	return *cached
 }
 
-func EstimateDecredSupply(c DecredSubsidyCalculator, height int64) int64 {
+func EstimateDecredSupply(c *DecredSubsidyParams, height int64, BlockOneSubsidy int64) int64 {
 	if height <= 0 {
 		return 0
 	}
@@ -45,21 +45,21 @@ func EstimateDecredSupply(c DecredSubsidyCalculator, height int64) int64 {
 	// reduction interval and multiplying it the number of blocks in the
 	// interval then adding the subsidy produced by number of blocks in the
 	// current interval.
-	supply := c.BlockOneSubsidy()
-	reductions := height / c.SubsidyReductionInterval()
-	subsidy := c.BaseSubsidy()
+	supply := BlockOneSubsidy
+	reductions := height / c.SubsidyReductionInterval
+	subsidy := c.BaseSubsidy
 	for i := int64(0); i < reductions; i++ {
-		supply += c.SubsidyReductionInterval() * subsidy
+		supply += c.SubsidyReductionInterval * subsidy
 
-		subsidy *= c.MulSubsidy()
-		subsidy /= c.DivSubsidy()
+		subsidy *= c.MulSubsidy
+		subsidy /= c.DivSubsidy
 	}
-	supply += (1 + height%c.SubsidyReductionInterval()) * subsidy
+	supply += (1 + height%c.SubsidyReductionInterval) * subsidy
 
 	// Blocks 0 and 1 have special subsidy amounts that have already been
 	// added above, so remove what their subsidies would have normally been
 	// which were also added above.
-	supply -= c.BaseSubsidy() * 2
+	supply -= c.BaseSubsidy * 2
 
 	return supply
 }

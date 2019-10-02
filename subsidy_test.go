@@ -99,13 +99,13 @@ func fullSubsidyCheck(t *testing.T, calc SubsidyCalculator, expected int64) {
 const originalTestExpected int64 = 2099999999800912
 
 func TestDecredSubsidyOriginal(t *testing.T) {
-	calc := DecredMainNetSubsidy()
+	calc := DecredMainNetSubsidy().(*DecredMainNetSubsidyCalculator)
 	expected := calc.ExpectedTotalNetworkSubsidy().AtomsValue
 	expected = originalTestExpected
-	originalDecredSubsidyCheck(t, calc.(DecredSubsidyCalculator), expected)
+	originalDecredSubsidyCheck(t, calc, expected)
 }
 
-func originalDecredSubsidyCheck(t *testing.T, calc DecredSubsidyCalculator, expected int64) {
+func originalDecredSubsidyCheck(t *testing.T, calc *DecredMainNetSubsidyCalculator, expected int64) {
 	totalSubsidy := calc.BlockOneSubsidy()
 	for i := int64(0); ; i++ {
 		// Genesis block or first block.
@@ -113,11 +113,11 @@ func originalDecredSubsidyCheck(t *testing.T, calc DecredSubsidyCalculator, expe
 			continue
 		}
 
-		if i%calc.SubsidyReductionInterval() == 0 {
-			numBlocks := calc.SubsidyReductionInterval()
+		if i%calc.subsidyParams.SubsidyReductionInterval == 0 {
+			numBlocks := calc.subsidyParams.SubsidyReductionInterval
 			// First reduction internal, which is reduction interval - 2
 			// to skip the genesis block and block one.
-			if i == calc.SubsidyReductionInterval() {
+			if i == calc.subsidyParams.SubsidyReductionInterval {
 				numBlocks -= 2
 			}
 			height := i - numBlocks
@@ -132,7 +132,7 @@ func originalDecredSubsidyCheck(t *testing.T, calc DecredSubsidyCalculator, expe
 
 			// First reduction internal, subtract the stake subsidy for
 			// blocks before the staking system is enabled.
-			if i == calc.SubsidyReductionInterval() {
+			if i == calc.subsidyParams.SubsidyReductionInterval {
 				totalSubsidy -= stake * (calc.StakeValidationHeight() - 2)
 			}
 		}

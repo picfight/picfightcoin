@@ -23,8 +23,7 @@ func TestPremine(t *testing.T) {
 	}
 }
 
-//var expectedPFCActual = coin.FromFloat(7999999.84736554)
-var expectedPFCActual = coin.FromFloat(7999999.97687360)
+var expectedPFCActual = coin.Amount{7777699369282}
 
 func TestPicfightCoinSubsidy(t *testing.T) {
 	calc := PicFightCoinSubsidy()
